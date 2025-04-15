@@ -23,6 +23,7 @@ int config_init()
 		task[i].isLoop = 0;
 		task[i].uart_fd = -1;
 		task[i].uart_rate = 921600;
+		task[i].uart_timeout = (task[i].uart_rate * (-0.08f)) + 82000;
 		task[i].epoll_fd = -1;
 		task[i].server_fd = -1;
 		task[i].client_fd = -1;
