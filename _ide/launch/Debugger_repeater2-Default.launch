@@ -21,7 +21,7 @@
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uiprogram.fpga" value="false"/>
     <stringAttribute key="com.xilinx.sdk.tcf.debug.uiproject.name" value="repeater2"/>
     <stringAttribute key="com.xilinx.sdk.tcf.debug.uips.device" value="Auto Detect"/>
-    <booleanAttribute key="com.xilinx.sdk.tcf.debug.uips7.init" value="false"/>
+    <booleanAttribute key="com.xilinx.sdk.tcf.debug.uips7.init" value="true"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uips7.post" value="false"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uireset.apu" value="false"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uireset.lock.step" value="false"/>
@@ -58,15 +58,19 @@
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="4"/>
     </listAttribute>
+    <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+        <listEntry value="com.xilinx.ide.launchGroup.embocl.run"/>
+    </listAttribute>
     <booleanAttribute key="org.eclipse.tcf.debug.AttachChildren" value="true"/>
     <booleanAttribute key="org.eclipse.tcf.debug.DisconnectOnCtxExit" value="true"/>
     <stringAttribute key="org.eclipse.tcf.debug.LocalProgramFile" value="Debug/repeater2.elf"/>
-    <stringAttribute key="org.eclipse.tcf.debug.ProgramFile" value="/home/root/repeater2.elf"/>
+    <stringAttribute key="org.eclipse.tcf.debug.ProgramFile" value="/mnt/sd-mmcblk0p1/repeater2.elf"/>
     <stringAttribute key="org.eclipse.tcf.debug.ProjectName" value="repeater2"/>
     <booleanAttribute key="org.eclipse.tcf.debug.StopAtEntry" value="false"/>
     <booleanAttribute key="org.eclipse.tcf.debug.StopAtMain" value="true"/>
     <booleanAttribute key="org.eclipse.tcf.debug.UseContextFilter" value="false"/>
     <booleanAttribute key="org.eclipse.tcf.debug.UseTerminal" value="true"/>
+    <stringAttribute key="org.eclipse.tcf.debug.WorkingDirectory" value="/mnt/sd-mmcblk0p1/"/>
     <stringAttribute key="profile.data.transfer.trace" value="coarse"/>
     <stringAttribute key="profile.enable" value="true"/>
     <stringAttribute key="profile.mode" value="default"/>

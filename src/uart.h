@@ -23,7 +23,7 @@
 #define BASE_UART_DEVICE 	"/dev/ttyLH"
 
 #define UART_CHANNELS 		16
-#define BUFFER_SIZE 		1024
+#define BUFFER_SIZE 		8192
 #define UART_BASE 			0x43C00010
 
 

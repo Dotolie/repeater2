@@ -54,9 +54,14 @@ int set_baud_rate(int ch, int baud_rate)
         return -1;
     }
 
+	*((volatile uint32_t *)(ptr + 0x0c)) = 0x03;
+	usleep(1000);
+	*((volatile uint32_t *)(ptr + 0x0c)) = 0x00;
+
 	calc_baud = 100000000 / (baud_rate * 16);
 	printf("setting value = %d\n", calc_baud);
 	*((volatile uint32_t *)(ptr + 0x10)) = calc_baud;
+
 
     close(mem_fd);
 
@@ -87,13 +92,10 @@ int uart_open(sConfig *pTask)
     set_baud_rate(pTask->id, pTask->uart_rate);//ch, baud_rate
 
     pTask->uart_fd = open(uart_device, O_RDWR);
-    if (pTask->uart_fd == -1) {
-        DBG("drror : opening UART device id=%d\n", pTask->id);
+    if (pTask->uart_fd < 0) {
+        printf("drror : opening UART device id=%d\n", pTask->id);
         close(pTask->uart_fd);
         return -1;
-    } else {
-    	n = uart_read(pTask->uart_fd, uart_buffers, BUFFER_SIZE);
-        DBG("uart open :fd=%d, id=%d, read=%d\n", pTask->uart_fd, pTask->id, n);
     }
 
 	return 0;
@@ -102,7 +104,7 @@ int uart_open(sConfig *pTask)
 
 int uart_close(sConfig *pTask)
 {
-	DBG("close uart : fd=%d, id=%d\n", pTask->uart_fd, pTask->id);
+	printf("close uart : fd=%d, id=%d\n", pTask->uart_fd, pTask->id);
 
 	if (pTask->uart_fd > -1) {
 		close(pTask->uart_fd);

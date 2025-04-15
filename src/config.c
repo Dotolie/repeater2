@@ -8,6 +8,7 @@
 #include "config.h"
 #include "debug.h"
 #include "version.h"
+#include "queue.h"
 
 
 sConfig task[MAX_TASK];
@@ -25,6 +26,8 @@ int config_init()
 		task[i].epoll_fd = -1;
 		task[i].server_fd = -1;
 		task[i].client_fd = -1;
+
+		queue_init(&(task[i].queue));
 	}
 
 	return 0;
@@ -70,6 +73,9 @@ WordType config_classify(const char* word, char *num) {
 	}
 	else if( strncmp(word, "ver", 3) == 0 ) {
 		return WORD_VERSION;
+	}
+	else if( strncmp(word, "hello", 5) == 0 ) {
+		return WORD_GREETING;
 	}
 	else if( strncmp(word, "exit", 4) == 0 ) {
 		return WORD_EXIT;
@@ -134,6 +140,7 @@ int config_parse(const char *text)
         switch (words[i].type) {
             case WORD_EXIT: printf("exit\n"); break;
             case WORD_CHNO: printf("channel\n"); break;
+            case WORD_GREETING: printf("hello\n"); break;
             case WORD_GET: printf("getting\n"); break;
             case WORD_VERSION: printf("version\n"); break;
             case WORD_VALUE: printf("value\n"); break;
@@ -199,7 +206,7 @@ int config_work()
     	ret = epoll_ctl(epoll_fd, EPOLL_CTL_ADD,  client_fd, &event);
         DBG("client fd=%d, ip=%s, port=%d\n", client_fd, inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
-        send(client_fd, "connected\n", 10, 0);
+//        send(client_fd, "connected\n", 10, 0);
 
         isLoop = 1;
     	while(isLoop) {
@@ -221,13 +228,17 @@ int config_work()
 								isRun = 0;
 								ret = 0;	// for exit
 								break;
+							case WORD_GREETING:
+								send(client_fd, "Hi", 2, 0);
+								break;
 							case WORD_CHNO:
 								sprintf(outbuff,"%s=%d\n", words[i].word, task[words[i].num].uart_rate);
 								chnum = words[i].num;
 								break;
 							case WORD_VALUE:
 								task[chnum].uart_rate = words[i].num;
-								DBG("set ch=ch%d rate=%d\n", chnum, words[i].num);
+								task[chnum].uart_timeout = (words[i].num * (-0.08f)) + 82000;
+								DBG("set ch=ch%d rate=%d, timeout=%d\n", chnum, words[i].num, task[chnum].uart_timeout);
 								break;
 							case WORD_GET:
 								send(client_fd, outbuff, strlen(outbuff), 0);

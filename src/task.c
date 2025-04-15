@@ -17,6 +17,16 @@
 
 static int isRun = 1;
 
+static inline void sending(sConfig *p, int n)
+{
+	int ret = 0;
+	char buf[8192];
+	for(int k=0;k<n;k++) {
+		ret = queue_dequeue(&(p->queue), &buf[k]);
+		if ( ret == 0 ) printf("error:deque:k=%d\n", k);
+		if ( k >= (n-1) ) send(p->client_fd, buf, n, 0);
+	}
+}
 
 void *task_worker(void *pArg)
 {
@@ -24,6 +34,8 @@ void *task_worker(void *pArg)
 	int ret = -1;
 	int len = 0;
 	int n = 0;
+	int timeout = 100;
+
 
 	char uart_buffer[SIZE_BUF_U];
 	char socket_buffer[SIZE_BUF_S];
@@ -76,7 +88,7 @@ void *task_worker(void *pArg)
     	ret = epoll_ctl(p->epoll_fd, EPOLL_CTL_ADD,  p->client_fd, &event);
         DBG("client fd=%d, ip=%s, port=%d\n", p->client_fd, inet_ntoa(p->client_addr.sin_addr), ntohs(p->client_addr.sin_port));
 
-        send(p->client_fd, "connected\n", 10, 0);
+//        send(p->client_fd, "connected\n", 10, 0);
 
         ret = uart_open(p);
         if (ret==0) {
@@ -84,13 +96,13 @@ void *task_worker(void *pArg)
             event.events = EPOLLIN ;
         	event.data.fd = p->uart_fd;
         	ret = epoll_ctl(p->epoll_fd, EPOLL_CTL_ADD,  p->uart_fd, &event);
+        	timeout = p->uart_timeout;
         	p->isLoop = 1;
         }
         else {
-        	DBG("error: can't uart\n");
+        	printf("error: can't uart[%d]\n", p->id);
         	p->isLoop = 0;
         }
-
 
 
     	while(p->isLoop) {
@@ -101,29 +113,45 @@ void *task_worker(void *pArg)
     		}
     		for(int i=0;i<ret;i++) {
 //    			DBG("poll :i=%d, fd=%d\n", i, events[i].data.fd);
-
-    			if ( events[i].data.fd == p->uart_fd ) {
+    			if (events[i].data.fd == p->uart_fd) {
     				len = uart_read(p->uart_fd, uart_buffer, SIZE_BUF_U);
     				if (len > 0) {
-    					uart_buffer[len] = 0;
-    					DBG("uart:fd=%d,l=%d\n", p->uart_fd, len);
-    					n = send(p->client_fd, uart_buffer, len, 0);
+    					for(int j=0;j<len;j++) {
+    						ret = queue_enqueue(&(p->queue), uart_buffer[j]);
+    						if (ret < 0) printf("error:enque:j=%d\n", j);
+    					}
     				}
-    				else {
-    					usleep(1000);
-//    					DBG("uart:len=%d\n", len);
+    				{
+    					n = queue_size(&(p->queue));
+    					if (n > 0) {
+    						if ( n >= SIZE_PKT ) {
+    							timeout = p->uart_timeout;
+    							sending(p, n);
+    						}
+    						else {
+    							timeout--;
+    							if (timeout <= 0) {
+    								timeout = p->uart_timeout;
+    								sending(p, n);
+    							}
+
+    						}
+    					}
+    					else {
+    						usleep(1000);
+    					}
+ //    					DBG("uart:len=%d\n", len);
     				}
     			}
-    			else if ( events[i].data.fd == p->client_fd ) {
+    			else if (events[i].data.fd == p->client_fd) {
     				len = recv(p->client_fd, socket_buffer, SIZE_BUF_S, 0);
     				if (len > 0) {
-    					socket_buffer[len] = 0;
-    					DBG("socket:fd=%d,l=%d,%s\n",p->client_fd, len, socket_buffer);
+//    					socket_buffer[len] = 0;
+//    					DBG("socket:fd=%d,l=%d\n",p->client_fd, len);
     					n = write(p->uart_fd, socket_buffer, len);
     				}
     				else {
     					DBG("socket:len=%d, close client fd=%d\n", len, p->client_fd);
-
     					p->isLoop = 0;
     				}
     			}
@@ -139,7 +167,7 @@ void *task_worker(void *pArg)
 		uart_close(p);
 		// epoll delete for uart
 		epoll_ctl(p->epoll_fd, EPOLL_CTL_DEL, p->uart_fd, NULL);
-		p->uart_fd = -1;
+
 
     	DBG("thread loop exit: id=%d\n", p->id);
     }

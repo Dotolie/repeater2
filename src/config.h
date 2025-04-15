@@ -5,6 +5,9 @@
 #include <arpa/inet.h>
 #include <poll.h>
 
+#include "queue.h"
+
+
 #define MAX_TASK	16
 #define PORT_BASE	32000
 
@@ -24,6 +27,7 @@ typedef enum {
     WORD_CHNO,
     WORD_VALUE,
     WORD_VERSION,
+	WORD_GREETING,
     WORD_GET,
 	WORD_ENTER,
     WORD_UNKNOWN
@@ -43,6 +47,7 @@ typedef struct {
 	int isLoop;
 	int uart_fd;
 	int uart_rate;
+	int uart_timeout;
 	int epoll_fd;
 	int	server_fd;
 	int client_fd;
@@ -51,6 +56,8 @@ typedef struct {
 	struct sockaddr_in client_addr;
 
 	pthread_t threadId;
+
+	Queue queue;
 } sConfig;
 
 
