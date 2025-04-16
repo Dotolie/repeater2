@@ -15,24 +15,39 @@
 
 
 
-static int isRun = 1;
-
-static inline void sending(sConfig *p, int n)
+static inline void sending(sConfig *p, char *data, int n)
 {
-	int ret = 0;
-	char buf[8192];
-	for(int k=0;k<n;k++) {
-		ret = queue_dequeue(&(p->queue), &buf[k]);
-		if ( ret == 0 ) printf("error:deque:k=%d\n", k);
-		if ( k >= (n-1) ) send(p->client_fd, buf, n, 0);
+	static int	flip = 0;
+	static int 	idx = 0;
+	static char buf[2][256];
+
+	if (n > 0) {
+		for(int k=0;k<n;k++) {
+			buf[flip][idx] = data[k];
+			idx++;
+			if (idx >= 256) {
+				send(p->client_fd, buf[flip], 256, 0);
+				flip = (flip + 1) % 2;
+				idx = 0;
+			}
+		}
+	}
+	else {
+		if (idx != 0) {
+			send(p->client_fd, buf[flip], idx, 0);
+			flip = (flip + 1) % 2;
+			idx = 0;
+		}
 	}
 }
+
 
 void *task_worker(void *pArg)
 {
 	int option = 1;
 	int ret = -1;
 	int len = 0;
+	int lenS = 0;
 	int n = 0;
 	int timeout = 100;
 
@@ -116,39 +131,24 @@ void *task_worker(void *pArg)
     			if (events[i].data.fd == p->uart_fd) {
     				len = uart_read(p->uart_fd, uart_buffer, SIZE_BUF_U);
     				if (len > 0) {
-    					for(int j=0;j<len;j++) {
-    						ret = queue_enqueue(&(p->queue), uart_buffer[j]);
-    						if (ret < 0) printf("error:enque:j=%d\n", j);
-    					}
+    					sending(p, uart_buffer, len);
     				}
-    				{
-    					n = queue_size(&(p->queue));
-    					if (n > 0) {
-    						if ( n >= SIZE_PKT ) {
-    							timeout = p->uart_timeout;
-    							sending(p, n);
-    						}
-    						else {
-    							timeout--;
-    							if (timeout <= 0) {
-    								timeout = p->uart_timeout;
-    								sending(p, n);
-    							}
-
-    						}
+    				else {
+    					timeout--;
+    					if (timeout <= 0) {
+    						sending(p, uart_buffer, len);
+    						timeout = p->uart_timeout;
     					}
     					else {
-    						usleep(1000);
+    						usleep(5000);
     					}
- //    					DBG("uart:len=%d\n", len);
     				}
     			}
     			else if (events[i].data.fd == p->client_fd) {
-    				len = recv(p->client_fd, socket_buffer, SIZE_BUF_S, 0);
-    				if (len > 0) {
-//    					socket_buffer[len] = 0;
+    				lenS = recv(p->client_fd, socket_buffer, SIZE_BUF_S, 0);
+    				if (lenS > 0) {
 //    					DBG("socket:fd=%d,l=%d\n",p->client_fd, len);
-    					n = write(p->uart_fd, socket_buffer, len);
+    					n = write(p->uart_fd, socket_buffer, lenS);
     				}
     				else {
     					DBG("socket:len=%d, close client fd=%d\n", len, p->client_fd);
@@ -174,24 +174,11 @@ void *task_worker(void *pArg)
 
 	DBG("-----task exit----\n");
 
-	task_stop();
 
 	pthread_exit(NULL);
 }
 
 
-int task_isRun()
-{
-	return isRun;
-}
-
-
-int task_stop()
-{
-	isRun = 0;
-
-	return 0;
-}
 
 
 int task_init()

@@ -8,8 +8,9 @@
 #include "config.h"
 #include "debug.h"
 #include "version.h"
-#include "queue.h"
 
+
+#define FX(x)	(x * (-0.00045f) + 620)
 
 sConfig task[MAX_TASK];
 Word words[MAX_WORDS];
@@ -23,12 +24,10 @@ int config_init()
 		task[i].isLoop = 0;
 		task[i].uart_fd = -1;
 		task[i].uart_rate = 921600;
-		task[i].uart_timeout = (task[i].uart_rate * (-0.08f)) + 82000;
+		task[i].uart_timeout = FX(task[i].uart_rate);
 		task[i].epoll_fd = -1;
 		task[i].server_fd = -1;
 		task[i].client_fd = -1;
-
-		queue_init(&(task[i].queue));
 	}
 
 	return 0;
@@ -238,7 +237,7 @@ int config_work()
 								break;
 							case WORD_VALUE:
 								task[chnum].uart_rate = words[i].num;
-								task[chnum].uart_timeout = (words[i].num * (-0.08f)) + 82000;
+								task[chnum].uart_timeout = FX(words[i].num);
 								DBG("set ch=ch%d rate=%d, timeout=%d\n", chnum, words[i].num, task[chnum].uart_timeout);
 								break;
 							case WORD_GET:

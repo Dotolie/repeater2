@@ -5,7 +5,6 @@
 #include <arpa/inet.h>
 #include <poll.h>
 
-#include "queue.h"
 
 
 #define MAX_TASK	16
@@ -56,8 +55,6 @@ typedef struct {
 	struct sockaddr_in client_addr;
 
 	pthread_t threadId;
-
-	Queue queue;
 } sConfig;
 
 
