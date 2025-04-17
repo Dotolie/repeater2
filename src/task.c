@@ -15,18 +15,21 @@
 
 
 
+
+
+
 static inline void sending(sConfig *p, char *data, int n)
 {
 	static int	flip = 0;
 	static int 	idx = 0;
-	static char buf[2][256];
+	static char buf[2][SIZE_PKT];
 
 	if (n > 0) {
 		for(int k=0;k<n;k++) {
 			buf[flip][idx] = data[k];
 			idx++;
-			if (idx >= 256) {
-				send(p->client_fd, buf[flip], 256, 0);
+			if (idx >= SIZE_PKT) {
+				send(p->client_fd, buf[flip], SIZE_PKT, 0);
 				flip = (flip + 1) % 2;
 				idx = 0;
 			}
@@ -140,7 +143,7 @@ void *task_worker(void *pArg)
     						timeout = p->uart_timeout;
     					}
     					else {
-    						usleep(5000);
+    						usleep(1000);
     					}
     				}
     			}
@@ -177,8 +180,6 @@ void *task_worker(void *pArg)
 
 	pthread_exit(NULL);
 }
-
-
 
 
 int task_init()

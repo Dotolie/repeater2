@@ -10,7 +10,7 @@
 #include "version.h"
 
 
-#define FX(x)	(x * (-0.00045f) + 620)
+#define FX(x)	(x * (-0.001f) + 1200)
 
 sConfig task[MAX_TASK];
 Word words[MAX_WORDS];
