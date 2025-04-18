@@ -55,6 +55,10 @@ typedef struct {
 	struct sockaddr_in client_addr;
 
 	pthread_t threadId;
+
+	int	flip;
+	int	idx;
+	char buf[2][256];
 } sConfig;
 
 

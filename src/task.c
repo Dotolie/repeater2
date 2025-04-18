@@ -20,26 +20,22 @@
 
 static inline void sending(sConfig *p, char *data, int n)
 {
-	static int	flip = 0;
-	static int 	idx = 0;
-	static char buf[2][SIZE_PKT];
-
 	if (n > 0) {
 		for(int k=0;k<n;k++) {
-			buf[flip][idx] = data[k];
-			idx++;
-			if (idx >= SIZE_PKT) {
-				send(p->client_fd, buf[flip], SIZE_PKT, 0);
-				flip = (flip + 1) % 2;
-				idx = 0;
+			p->buf[p->flip][p->idx] = data[k];
+			p->idx++;
+			if (p->idx >= SIZE_PKT) {
+				send(p->client_fd, p->buf[p->flip], SIZE_PKT, 0);
+				p->flip = (p->flip + 1) % 2;
+				p->idx = 0;
 			}
 		}
 	}
 	else {
-		if (idx != 0) {
-			send(p->client_fd, buf[flip], idx, 0);
-			flip = (flip + 1) % 2;
-			idx = 0;
+		if (p->idx != 0) {
+			send(p->client_fd, p->buf[p->flip], p->idx, 0);
+			p->flip = (p->flip + 1) % 2;
+			p->idx = 0;
 		}
 	}
 }

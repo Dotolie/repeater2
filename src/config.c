@@ -28,6 +28,9 @@ int config_init()
 		task[i].epoll_fd = -1;
 		task[i].server_fd = -1;
 		task[i].client_fd = -1;
+
+		task[i].flip = 0;
+		task[i].idx = 0;
 	}
 
 	return 0;
