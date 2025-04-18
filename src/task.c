@@ -48,7 +48,7 @@ void *task_worker(void *pArg)
 	int len = 0;
 	int lenS = 0;
 	int n = 0;
-	int timeout = 100;
+	int timeout = 0;
 
 
 	char uart_buffer[SIZE_BUF_U];
@@ -110,7 +110,7 @@ void *task_worker(void *pArg)
             event.events = EPOLLIN ;
         	event.data.fd = p->uart_fd;
         	ret = epoll_ctl(p->epoll_fd, EPOLL_CTL_ADD,  p->uart_fd, &event);
-        	timeout = p->uart_timeout;
+        	timeout = 0;
         	p->isLoop = 1;
         }
         else {
@@ -133,13 +133,13 @@ void *task_worker(void *pArg)
     					sending(p, uart_buffer, len);
     				}
     				else {
-    					timeout--;
-    					if (timeout <= 0) {
+    					timeout++;
+    					if (timeout >= p->uart_timeout) {
     						sending(p, uart_buffer, len);
-    						timeout = p->uart_timeout;
+    						timeout = 0;
     					}
     					else {
-    						usleep(1000);
+    						usleep(1200);
     					}
     				}
     			}
