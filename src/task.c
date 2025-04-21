@@ -100,7 +100,7 @@ void *task_worker(void *pArg)
         event.events = EPOLLIN ;
     	event.data.fd = p->client_fd;
     	ret = epoll_ctl(p->epoll_fd, EPOLL_CTL_ADD,  p->client_fd, &event);
-        DBG("client fd=%d, ip=%s, port=%d\n", p->client_fd, inet_ntoa(p->client_addr.sin_addr), ntohs(p->client_addr.sin_port));
+        DBG("client fd=%d, ip=%s, port=%d, to=%d\n", p->client_fd, inet_ntoa(p->client_addr.sin_addr), ntohs(p->client_addr.sin_port), p->uart_timeout);
 
 //        send(p->client_fd, "connected\n", 10, 0);
 

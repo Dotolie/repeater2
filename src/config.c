@@ -10,7 +10,7 @@
 #include "version.h"
 
 
-#define FX(x)	(x * (-0.001f) + 1200)
+#define FX(x)	(x * (-0.000451f) + 680)
 
 sConfig task[MAX_TASK];
 Word words[MAX_WORDS];
@@ -232,7 +232,7 @@ int config_work()
 								ret = 0;	// for exit
 								break;
 							case WORD_GREETING:
-								send(client_fd, "Hi", 2, 0);
+								send(client_fd, "Hi\n", 3, 0);
 								break;
 							case WORD_CHNO:
 								sprintf(outbuff,"%s=%d\n", words[i].word, task[words[i].num].uart_rate);
