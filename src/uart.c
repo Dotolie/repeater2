@@ -83,9 +83,9 @@ int uart_end()
 
 int uart_open(sConfig *pTask)
 {
-	int n = 0;
+//	int n = 0;
 	char uart_device[UART_CHANNELS];
-	char uart_buffers[BUFFER_SIZE];
+//	char uart_buffers[BUFFER_SIZE];
 
     snprintf(uart_device, sizeof(uart_device), "%s%d", BASE_UART_DEVICE, pTask->id);
 

@@ -8,7 +8,7 @@
     <stringAttribute key="com.xilinx.sdk.tcf.debug.ui.fsbl_path" value="${sdxTcfLaunchFile:project=repeater2;fileType=fsbl;}"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.ui.fsbl_run" value="true"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.ui.skip.fpga.revision.check" value="false"/>
-    <stringAttribute key="com.xilinx.sdk.tcf.debug.uiapplication.path" value="Debug/repeater2.elf"/>
+    <stringAttribute key="com.xilinx.sdk.tcf.debug.uiapplication.path" value="Release/repeater2.elf"/>
     <stringAttribute key="com.xilinx.sdk.tcf.debug.uicrosstrigger.bpcontainer" value="{&quot;arch&quot;:&quot;zynq&quot;,&quot;isSelected&quot;:false,&quot;breakPoints&quot;:[]}"/>
     <stringAttribute key="com.xilinx.sdk.tcf.debug.uidebug.type" value="LINUX_APPLICATION_DEBUG"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uienable.crosstrigger" value="false"/>
@@ -21,14 +21,14 @@
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uiprogram.fpga" value="false"/>
     <stringAttribute key="com.xilinx.sdk.tcf.debug.uiproject.name" value="repeater2"/>
     <stringAttribute key="com.xilinx.sdk.tcf.debug.uips.device" value="Auto Detect"/>
-    <booleanAttribute key="com.xilinx.sdk.tcf.debug.uips7.init" value="true"/>
+    <booleanAttribute key="com.xilinx.sdk.tcf.debug.uips7.init" value="false"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uips7.post" value="false"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uireset.apu" value="false"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uireset.lock.step" value="false"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uireset.rpu" value="false"/>
     <booleanAttribute key="com.xilinx.sdk.tcf.debug.uireset.system" value="true"/>
     <stringAttribute key="com.xilinx.sdk.tcf.debug.uitarget.peer" value="Linux Agent"/>
-    <stringAttribute key="com.xilinx.sdx.sdsoc.debug.ui.active.build.config" value="Debug"/>
+    <stringAttribute key="com.xilinx.sdx.sdsoc.debug.ui.active.build.config" value="Release"/>
     <stringAttribute key="com.xilinx.sdx.sdsoc.debug.ui.application.type" value=""/>
     <stringAttribute key="com.xilinx.sdx.sdsoc.debug.ui.build.disabled" value="false"/>
     <stringAttribute key="com.xilinx.sdx.sdsoc.debug.ui.custom.launch.storage" value=""/>
@@ -63,14 +63,13 @@
     </listAttribute>
     <booleanAttribute key="org.eclipse.tcf.debug.AttachChildren" value="true"/>
     <booleanAttribute key="org.eclipse.tcf.debug.DisconnectOnCtxExit" value="true"/>
-    <stringAttribute key="org.eclipse.tcf.debug.LocalProgramFile" value="Debug/repeater2.elf"/>
-    <stringAttribute key="org.eclipse.tcf.debug.ProgramFile" value="/mnt/sd-mmcblk0p1/repeater2.elf"/>
+    <stringAttribute key="org.eclipse.tcf.debug.LocalProgramFile" value="Release/repeater2.elf"/>
+    <stringAttribute key="org.eclipse.tcf.debug.ProgramFile" value="/home/root/repeater2.elf"/>
     <stringAttribute key="org.eclipse.tcf.debug.ProjectName" value="repeater2"/>
     <booleanAttribute key="org.eclipse.tcf.debug.StopAtEntry" value="false"/>
     <booleanAttribute key="org.eclipse.tcf.debug.StopAtMain" value="true"/>
     <booleanAttribute key="org.eclipse.tcf.debug.UseContextFilter" value="false"/>
     <booleanAttribute key="org.eclipse.tcf.debug.UseTerminal" value="true"/>
-    <stringAttribute key="org.eclipse.tcf.debug.WorkingDirectory" value="/mnt/sd-mmcblk0p1/"/>
     <stringAttribute key="profile.data.transfer.trace" value="coarse"/>
     <stringAttribute key="profile.enable" value="true"/>
     <stringAttribute key="profile.mode" value="default"/>

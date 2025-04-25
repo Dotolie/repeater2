@@ -1,9 +1,9 @@
 #ifndef	__TASK_H__
 #define __TASK_H__
 
-#define SIZE_PKT	128
-#define	SIZE_BUF_S	8192
-#define	SIZE_BUF_U	8192
+#define SIZE_PKT	256
+#define	SIZE_BUF_S	1024
+#define	SIZE_BUF_U	1024
 #define	SIZE_EPOLL	2
 #define	SIZE_TASK	16
 

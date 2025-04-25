@@ -139,15 +139,15 @@ void *task_worker(void *pArg)
     						timeout = 0;
     					}
     					else {
-    						usleep(1200);
+    						usleep(1000);
     					}
     				}
     			}
     			else if (events[i].data.fd == p->client_fd) {
     				lenS = recv(p->client_fd, socket_buffer, SIZE_BUF_S, 0);
     				if (lenS > 0) {
-//    					DBG("socket:fd=%d,l=%d\n",p->client_fd, len);
     					n = write(p->uart_fd, socket_buffer, lenS);
+//    					DBG("socket:fd=%d,l=%d,n=%d\n",p->client_fd, lenS, n);
     				}
     				else {
     					DBG("socket:len=%d, close client fd=%d\n", len, p->client_fd);
